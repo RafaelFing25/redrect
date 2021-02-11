@@ -9,8 +9,6 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 const Handlebars = require('handlebars')
 const routes = require('./Routes')
 
-const passport = require('passport')
-require('./config/auth')(passport)
 
 
 // ! Configuraçoes
@@ -20,8 +18,8 @@ require('./config/auth')(passport)
             resave: true,
             saveUninitialized: true
         })) 
-        app.use(passport.initialize())
-        app.use(passport.session())
+        
+        
         app.use(flash())
     //? middlewares
         app.use((req,res, next) =>{
