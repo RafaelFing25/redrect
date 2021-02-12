@@ -9,6 +9,10 @@ const Schema = mongoose.Schema({
         required:true,
         unique:true,
     },
+    views:{
+        type: Number,
+        default: 0
+    },
     createdAt:{
         type:Date,
         default:Date.now()

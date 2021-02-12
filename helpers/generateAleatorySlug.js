@@ -7,7 +7,7 @@ const random = ()=>{
 
 const getSlug = () =>{
     const slug = []
-    for(let i = 0; i<5;i++){
+    for(let i = 0; i<6;i++){
         const letter = alphabet[random()]
         slug.push(letter)
     }

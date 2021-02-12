@@ -33,8 +33,14 @@ router.get('/url/:id',(req,res)=>{
 router.get('/:slug',(req,res)=>{
     const slug = req.params.slug
     console.log(slug)
-    LinkModel.findOne({slug:slug}).lean().then(result=>{
-        return res.redirect(result.url)
+    LinkModel.findOne({slug:slug}).then(result=>{
+        console.log(result)
+        result.views = result.views + 1
+        console.log('save')
+        result.save().then(_=>{
+            console.log('hi')
+            return res.redirect(result.url)
+        }).catch(_=>cosole.log(err))
     }).catch(err=>res.redirect('/'))
 })
 
