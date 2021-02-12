@@ -8,6 +8,8 @@ const flash = require('connect-flash')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const Handlebars = require('handlebars')
 const routes = require('./Routes')
+const dotenv = require('dotenv')
+dotenv.config()
 
 
 
@@ -45,7 +47,7 @@ const routes = require('./Routes')
         app.set('view engine', 'handlebars')
     //? Mongoose
         mongoose.Promise = global.Promise
-        mongoose.connect('mongodb+srv://Rafael:hRKhwJw97AkmJLmM@bloagapp.kikv6.mongodb.net/Bloagapp?retryWrites=true&w=majority', {
+        mongoose.connect(process.env.DB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         useFindAndModify: false }).then(() => {
