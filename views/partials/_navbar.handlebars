@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
   <a class="navbar-brand" href="/">reDrect</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -6,15 +6,29 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+      <li class="nav-item " id="home" >
+        <a class="nav-link" href="/" >Home</a>
       </li>
-          <li class="nav-item">
-            <a class="nav-link " href="/sobre" tabindex="-1" >Sobre</a>
+          <li class="nav-item" id="sobre">
+            <a class="nav-link " href="/sobre"  tabindex="-1" >Sobre</a>
           </li>        
-      <li class="nav-item">
+      <li class="nav-item" id="encurtar">
         <a class="nav-link " href="/encurtar" tabindex="-1" >Encurtar URL</a>
       </li>
     </ul>
   </div>
 </nav>
+
+<script>
+  const page = window.location.href.split('/')[3]
+  const home = document.querySelector('#home')
+  const sobre = document.querySelector('#sobre')
+  const encurtar = document.querySelector('#encurtar')
+  if(page == ''){
+    home.classList.add('active')
+  }else if(page === 'sobre'){
+    sobre.classList.add('active')
+  }else if(page === 'encurtar'){
+    encurtar.classList.add('active')
+  }
+</script>

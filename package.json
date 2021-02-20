@@ -16,6 +16,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.11.11",
     "passport": "^0.4.1",
+    "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
