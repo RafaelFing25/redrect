@@ -30,7 +30,7 @@ router.get('/url/:id',(req,res)=>{
         res.render('urlshow',{link})
     }).catch(err=>{
         req.flash('error_msg',"Ocorreu um erro ao solicitar a url")
-        req.redirect('/encurtar')
+        res.redirect('/encurtar')
     })
 })
 router.get('/sobre',(req,res)=>{
