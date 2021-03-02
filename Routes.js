@@ -42,6 +42,7 @@ router.get('/sobre',(req,res)=>{
 router.get('/:slug',(req,res)=>{
     const slug = req.params.slug
     LinkModel.findOne({slug:slug}).then(result=>{
+        conole.log(result)
         result.views = result.views + 1
         result.save().then(_=>{
             return res.redirect(result.url)
