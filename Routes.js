@@ -46,6 +46,9 @@ router.get('/url/:slug',(req,res)=>{
         result.save().then(_=>{
             return res.redirect(result.url)
         }).catch(_=>cosole.log(err))
-    }).catch(err=>res.redirect('/'))
+    }).catch(err=>{
+        console.log(err)
+             res.redirect('/')
+    })
 })
 module.exports = router
