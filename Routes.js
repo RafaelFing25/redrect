@@ -18,14 +18,14 @@ router.post('/createlink',(req,res)=>{
         url,
         slug
     }
-     new LinkModel(saveDb).save().then(links=>res.redirect('/url/'+links._id)).catch(err=>console.log(err))
+     new LinkModel(saveDb).save().then(links=>res.redirect('/show/'+links._id)).catch(err=>console.log(err))
 })  
 
 router.get('/encurtar',(req,res)=>{
     res.render('encurt')
 })
 
-router.get('/url/:id',(req,res)=>{
+router.get('/show/:id',(req,res)=>{
     LinkModel.findById(req.params.id).then(link=>{
         res.render('urlshow',{link})
     }).catch(err=>{
