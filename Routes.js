@@ -39,7 +39,7 @@ router.get('/sobre',(req,res)=>{
 
 
 
-router.get('/url/:slug',(req,res)=>{
+router.get('/:slug',(req,res)=>{
     const slug = req.params.slug
     LinkModel.findOne({slug:slug}).then(result=>{
         result.views = result.views + 1
