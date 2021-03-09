@@ -41,7 +41,6 @@ router.post('/createlink',async(req,res)=>{
             slug = generateAleatorySlug()
             console.log(slug)
         }
-        console.log(slug)
         const save ={
             url,
             slug
