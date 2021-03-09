@@ -1,3 +1,7 @@
+<head>
+    <title>Encurtar</title>
+</head>
+
 <div class="container">
     <h1>Encurte seu link!</h1>
     <form  action="/createlink" method="POST">
@@ -6,6 +10,14 @@
         <div class="col-sm-10">
             <input class="form-control" type="text" name="url" placeholder="ex:https://google.com">
         </div>
+            {{#if user}}
+            <label class=" col-sm-2 col-form-label mt-2"for="slug">Slug: </label>
+            <div class="col-sm-10 mt-2">
+                <input class="form-control" type="text" name="slug" placeholder="meuLink">
+            </div>
+            {{else}}
+            <p>Para pesonalizar a slug entre com sua conta google <a href="/profile">Clicando aqui</a></p>
+            {{/if}}
     </div>
     <div class="form-goup row">
 

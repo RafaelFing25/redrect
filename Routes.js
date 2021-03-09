@@ -5,20 +5,49 @@ const LinkModel = require('./modules/Link')
 const UserModel = require('./modules/User')
 const bcrypt = require('bcrypt')
 const validationUser = require('./helpers/validationUser')
+const passport = require('passport')
+const saveDb = require('./helpers/saveDb')
+const existSluginDb = require('./helpers/existSlugInDb')
 
+// Nunca descomente em produçao NUNCA, Isso exclui tudo os usuarios krl
+//UserModel.deleteMany().then(_=>console.log('deletado')).catch(err=>console.log(err))
 
 router.get('/', (req,res)=>{
     
     res.render('index')
 })
-router.post('/createlink',(req,res)=>{
+router.post('/createlink',async(req,res)=>{
     const url = req.body.url
-    const slug = generateAleatorySlug()
-    const saveDb ={
-        url,
-        slug
+    if (req.body.slug){
+        
+        console.log( await existSluginDb(req.body.slug))
+            if(await existSluginDb(req.body.slug)){
+                req.flash("error_msg","Slug ja existe")
+                res.redirect('/encurtar')
+            }else{
+                const save = {
+                    url,
+                    slug: req.body.slug
+                }
+            
+                saveDb(req,res,save)
+            }
+        
+        
+    }else{
+        var slug = generateAleatorySlug()
+        
+        while(await existSluginDb(slug)){
+            slug = generateAleatorySlug()
+            console.log(slug)
+        }
+        console.log(slug)
+        const save ={
+            url,
+            slug
+        }
+        saveDb(req,res,save)
     }
-     new LinkModel(saveDb).save().then(links=>res.redirect('/url/'+links._id)).catch(err=>console.log(err))
 })  
 
 router.get('/encurtar',(req,res)=>{
@@ -41,39 +70,55 @@ router.get('/registrar',(req,res)=>{
     res.render('register')
 })
 
-router.post('/register',(req,res)=>{
-    const user = req.body
-    const erros = validationUser(user)
-    console.log(erros.length)
-    if(erros.length >= 1){
-        console.log('loop')
-        erros.map((erro)=>{req.flash('error_msg',erro)})
-        res.redirect('/registrar')
+router.get('/google/login',passport.authenticate('google',{scope:['profile','email']}))
+
+router.get( '/google/callback', 
+    	passport.authenticate( 'google', { 
+    		successRedirect: '/profile',
+    		failureRedirect: '/login'
+}));
+
+router.get('/profile',(req,res)=>{
+    if(!req.isAuthenticated()){
+        res.render('noprofile')
+    }else{
+        console.log('req.user',req.user)
+        UserModel.findById(req.user._id).lean().populate('links').then(user=>{
+            console.log(user.links)
+            res.render('profile',{user})
+        }).catch(err=>{
+            console.log(err)
+            req.flash("error_msg", "Erro ao encotrar usuario")
+            res.redirect('/')
+        })
     }
-    UserModel.findOne({email:user.email}).then(existentUser=>{
-        if(existentUser){
-            req.flash("error_msg", "Email ja está sendo usado!")
-            res.redirect('/registrar')
-        }else{
-            const password = bcrypt.hashSync(user.password,10)
-            user.password = password
-            const User = new UserModel(user).save().then(_=>{
-                req.flash('success_msg',"Cadastro concluído! Desfrute das vantagems!")
-                res.redirect('/')
-            }).catch(err=>{
-                req.flash('error_msg',"Infelizmente occorreu um erro no seu cadastro! Tente novamente")
-                res.redirect('/registrar')
-            })
-        }
+})
+
+router.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+  
+router.post('/link/edit',(req,res)=>{
+    LinkModel.findById(req.body.id).then(link=>{
+        link.url = req.body.url
+        link.slug = req.body.slug
+
+        link.save().then(_=>{
+            req.flash("sucsess_msg","Sucesso ao editar!")
+            res.redirect('/profile')
+        }).catch(err=>{
+            req.flash("error_msg","Erro ao salvar!")
+            res.redirect('/profile')
+        })
     }).catch(err=>{
-        req.flash("error_msg", err+"Erro interno no servidor! Tente novamente!")
-        res.redirect('/registrar')
+        req.flash('error_msg',"Erro ao edita")
+        res.redirect('/profile')
     })
 })
 
-
 router.get('/:slug',(req,res)=>{
-    const slug = req.params.slu
+    const slug = req.params.slug
     LinkModel.findOne({slug:slug}).then(result=>{
         result.views = result.views + 1
         result.save().then(_=>{

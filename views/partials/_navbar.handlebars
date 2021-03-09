@@ -15,6 +15,15 @@
       <li class="nav-item" id="encurtar">
         <a class="nav-link " href="/encurtar" tabindex="-1" >Encurtar URL</a>
       </li>
+      {{#if user}}
+      <li class="nav-item" id="profile">
+        <a class="nav-link " href="/profile" tabindex="-1" >{{user.firstName}}</a>
+      </li>
+      {{else}}
+      <li class="nav-item" id="profile">
+        <a class="nav-link " href="/profile" tabindex="-1" >Entrar</a>
+      </li>
+      {{/if}}
     </ul>
   </div>
 </nav>
@@ -24,11 +33,14 @@
   const home = document.querySelector('#home')
   const sobre = document.querySelector('#sobre')
   const encurtar = document.querySelector('#encurtar')
+  const profile = document.querySelector('#profile')
   if(page == ''){
     home.classList.add('active')
   }else if(page === 'sobre'){
     sobre.classList.add('active')
   }else if(page === 'encurtar'){
     encurtar.classList.add('active')
+  }else if(page === 'profile'){
+    profile.classList.add('active')
   }
 </script>

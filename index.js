@@ -8,9 +8,10 @@ const flash = require('connect-flash')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const Handlebars = require('handlebars')
 const routes = require('./Routes')
+const apiRoutes = require('./apiRoutes')
 const dotenv = require('dotenv')
 dotenv.config()
-
+const passport = require('passport')
 
 
 // ! Configuraçoes
@@ -20,7 +21,8 @@ dotenv.config()
             resave: true,
             saveUninitialized: true
         })) 
-        
+        app.use( passport.initialize());
+        app.use( passport.session());
         
         app.use(flash())
     //? middlewares
@@ -59,8 +61,11 @@ dotenv.config()
     //? Public
         app.use(express.static('public'))
 
+     // poassport
+     require('./config/passport')
 //! Rotas
     app.use(routes)
+    app.use('/api',apiRoutes)
 
 //! Outros
 const PORTA = process.env.PORT || 8081

@@ -1,0 +1,136 @@
+<head>
+    <title>Profile - {{user.firstName}}</title>
+    <style>
+        img{
+            border-radius: 50%;
+        }
+        #modal-container{
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            background: rgba(0,0,0,.5);
+            top: 0px;
+            left: 0px;
+            z-index: 2000;
+            display:none;
+            justify-content: center;
+            align-items: center;
+        }
+        #modal{
+            background:white;
+            width: 60%;
+            min-width: 300px;
+            padding: 60px;
+            border: 10px solid rgb(144, 144, 231);
+            box-shadow: 0 0 0 10px rgb(130, 134, 231);
+        }
+        
+    </style>
+</head>
+
+<div class="container">
+    {{!-- <div class="d-flex justify-content-center"> --}}
+        <div class="card">
+            <div class="d-flex justify-content-center">
+                <div class="card-body ">
+                    <div class="d-flex justify-content-center">
+                        <img class="card-image " src="{{user.picture}}" alt="userprofilepicture">   
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h1 class="card-tittle">{{user.fullName}}</h1>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h2>{{user.email}}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{!-- </div> --}}
+    {{!-- <div class="d-flex justify-content-center"> --}}
+        <div class="card mt-2 mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-center">
+                    <h1>Seus Links</h1>
+                </div>
+                {{#each user.links}}
+                <div class="card mt-4">
+                    <div class="links">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p>Link de redirecionamento:{{url}}</p>
+                                    <p>Link: www.redrect/{{slug}}</p>
+                                    <button class="btn btn-danger">Excluir</button>
+                                    <button class="btn btn-primary" onclick="edit('{{_id}}')">Editar</button>
+
+                                </div>
+                                <div>
+                                    <p>Views: {{views}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                    <h1> Nenhum Link</h1>
+                {{/each}}
+            </div>
+        </div>
+    {{!-- </div> --}}
+    <div id="modal-container">
+        <div id="modal">
+            <h2>Editar</h2>
+            
+                <form action="/link/edit" method="post">
+                    <input type="hidden" id="id" name="id">
+                    <label for="url">Link de redirecionamento</label>
+                    <input type="text" name="url" id="url" placeholder="Link para redirecionamento">
+                    <label for="slug">Slug:</label>
+                    <input type="text"  id="slug" name="slug"  placeholder="Slug">
+                    <input type="submit" class="btn btn-primary" value="Salvar">
+                    <input type="button" value="Close" id="btnClose" class="btn btn-secondary">
+                </form>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script>
+    const inputUrl = document.getElementById('url')
+    const inputSlug = document.getElementById('slug')
+    const inputId = document.getElementById('id')
+    const modal = document.getElementById('modal-container')
+    function edit(id){
+        fetch("/api/details/"+id).then(response=>{
+            response.json().then(link=>{
+                inputUrl.removeAttribute('value')
+                inputSlug.removeAttribute('value')
+                inputId.removeAttribute('value')
+                inputUrl.setAttribute('value',link.url)
+                inputSlug.setAttribute('value',link.slug)
+                inputId.setAttribute('value', link._id)
+                modal.style.display = 'flex'
+            }).catch(err=>{
+                console.log(err)
+            })
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
+
+    
+    modal.addEventListener('click', (e)=>{
+        if(e.target.id === 'modal-container' || e.target.id == "btnClose")
+            modal.style.display = 'none'
+
+    })
+
+
+</script>
