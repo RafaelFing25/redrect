@@ -116,6 +116,10 @@ router.post('/link/edit',(req,res)=>{
     })
 })
 
+router.get('/privacy-policy',(res,get)=> {
+    
+})
+
 router.get('/:slug',(req,res)=>{
     const slug = req.params.slug
     LinkModel.findOne({slug:slug}).then(result=>{
