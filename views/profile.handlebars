@@ -24,7 +24,40 @@
             border: 10px solid rgb(144, 144, 231);
             box-shadow: 0 0 0 10px rgb(130, 134, 231);
         }
+        #modal-container-delete{
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            background: rgba(0,0,0,.5);
+            top: 0px;
+            left: 0px;
+            z-index: 2000;
+            display:none;
+            justify-content: center;
+            align-items: center;
+        }
+        #modal-delete{
+            background:white;
+            width: 60%;
+            min-width: 300px;
+            padding: 60px;
+            border: 10px solid rgb(144, 144, 231);
+            box-shadow: 0 0 0 10px rgb(130, 134, 231);
+        }
         
+        
+        @media only screen and (max-width:532px){
+            .linkDetails {
+                display:block !important;
+            }
+            .link{
+                font-size: small;
+
+            }
+            .profile{
+                font-size: small;
+            }
+        }
     </style>
 </head>
 
@@ -36,10 +69,10 @@
                         <img class="card-image " src="{{user.picture}}" alt="userprofilepicture">   
                     </div>
                     <div class="d-flex justify-content-center">
-                        <h1 class="card-tittle">{{user.fullName}}</h1>
+                        <h1 class="card-tittle profile">{{user.fullName}}</h1>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <h2>{{user.email}}</h2>
+                        <h2 class="profile">{{user.email}}</h2>
                     </div>
                 </div>
             </div>
@@ -53,11 +86,11 @@
                 <div class="card mt-4">
                     <div class="links">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center linkDetails">
                                 <div>
-                                    <p>Link de redirecionamento:{{url}}</p>
-                                    <p>Link: www.redrect.tk/{{slug}}</p>
-                                    <button class="btn btn-danger">Excluir</button>
+                                    <p class="link">Link de redirecionamento:<a href="{{url}}">{{url}}</a></p>
+                                    <p>Link:<a href="www.redrect.tk/{{slug}}">www.redrect.tk/{{slug}}</a></p>
+                                    <button class="btn btn-danger" onclick="exclude('{{_id}}')">Excluir</button>
                                     <button class="btn btn-primary" onclick="edit('{{_id}}')">Editar</button>
 
                                 </div>
@@ -83,9 +116,20 @@
                     <input type="text" name="url" id="url" placeholder="Link para redirecionamento">
                     <label for="slug">Slug:</label>
                     <input type="text"  id="slug" name="slug"  placeholder="Slug">
-                    <input type="submit" class="btn btn-primary" value="Salvar">
-                    <input type="button" value="Close" id="btnClose" class="btn btn-secondary">
+                    <input type="submit" class="btn btn-primary mt-2" value="Salvar">
+                    <input type="button" value="Close" id="btnClose" class="btn btn-secondary mt-2">
                 </form>
+        </div>
+    </div>
+    <div id="modal-container-delete">
+        <div id="modal-delete">
+            <form action="/link/delete" method="POST">
+                <input type="hidden" id="idDelete" name="id" >
+                <p>Deseja realmente excluir o link: </p>
+                <button class="btn btn-danger" type="submit">Sim</button>
+                <button class="btn btn-primary" type="button" id="btnNao">Não</button>
+            </form>
+
         </div>
     </div>
 </div>
@@ -97,6 +141,8 @@
 
 
 <script>
+    const modalDelete = document.getElementById('modal-container-delete')
+    const inputIdDelete = document.getElementById('idDelete')
     const inputUrl = document.getElementById('url')
     const inputSlug = document.getElementById('slug')
     const inputId = document.getElementById('id')
@@ -123,4 +169,23 @@
             modal.style.display = 'none'
 
     })
+
+    function exclude(id){
+        fetch("/api/details/"+id).then(response=>{
+            response.json().then(link=>{
+                inputIdDelete.setAttribute('value', link._id)
+                modalDelete.style.display = 'flex'
+            }).catch(err=>{
+                console.log(err)
+            })
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
+    modalDelete.addEventListener('click', (e)=>{
+        if(e.target.id === 'modal-container-delete' || e.target.id == "btnNao")
+            modalDelete.style.display = 'none'
+
+    })
+   
 </script>
