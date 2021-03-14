@@ -115,6 +115,36 @@ router.post('/link/edit',(req,res)=>{
         res.redirect('/profile')
     })
 })
+router.post('/link/delete',(req,res)=>{
+    LinkModel.deleteOne({id:req.body.id}).then(_=>{
+        LinkModel.findById(req.body.id).then(link=>{
+            UserModel.findById(req.user._id).then(user=>{
+                const index = user.links.indexOf(link._id)
+                user.links.splice(index,1)
+                user.save().then(_=>{
+                    req.flash('success_msg', "Deletado com sucesso")
+                    res.redirect('/profile')
+                }).catch(err=>{
+                    req.flash('error_msg',"Erro ao excluir tente novamente")
+                    res.redirect('/profile')
+                })
+                
+            }).catch(err=>{
+                console.log(err)
+                req.flash("error_msg","erro")
+                res.redirect('/profile')
+            })
+        }).catch(_=>{  
+            req.flash("error_msg","Não foi possivel fazer a exclusão")
+            res.redirect('/profile')
+        })
+        
+    }).catch(err=>{
+        console.log(err)
+        req.flash("error_msg","Não foi possivel fazer a exclusão")
+        res.redirect('/profile')
+    })
+})
 
 router.get('/privacy-policy',(res,get)=> {
     
