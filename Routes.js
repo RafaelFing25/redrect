@@ -55,10 +55,12 @@ router.get('/encurtar',(req,res)=>{
 
 router.get('/url/:id',(req,res)=>{
     LinkModel.findById(req.params.id).then(link=>{
-        res.render('urlshow',{link})
+        const host = req.get('host')
+        const protocol = req.protocol
+        res.render('urlshow',{link,host,protocol})
     }).catch(err=>{
         req.flash('error_msg',"Ocorreu um erro ao solicitar a url")
-        req.redirect('/encurtar')
+        res.redirect('/encurtar')
     })
 })
 router.get('/sobre',(req,res)=>{
