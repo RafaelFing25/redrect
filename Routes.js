@@ -19,8 +19,6 @@ router.get('/', (req,res)=>{
 router.post('/createlink',async(req,res)=>{
     const url = req.body.url
     if (req.body.slug){
-        
-        console.log( await existSluginDb(req.body.slug))
             if(await existSluginDb(req.body.slug)){
                 req.flash("error_msg","Slug ja existe")
                 res.redirect('/encurtar')
@@ -39,7 +37,6 @@ router.post('/createlink',async(req,res)=>{
         
         while(await existSluginDb(slug)){
             slug = generateAleatorySlug()
-            console.log(slug)
         }
         const save ={
             url,
@@ -83,14 +80,15 @@ router.get('/profile',(req,res)=>{
     if(!req.isAuthenticated()){
         res.render('noprofile')
     }else{
-        console.log('req.user',req.user)
         UserModel.findById(req.user._id).lean().populate('links').then(user=>{
             const host = req.get('host')
             const protocol = req.protocol
-            console.log(user.links)
-            user.links.protocol = protocol
-            user.links.host = host
-            res.render('profile',{user})
+            user.links.forEach(link => {
+                link.protocol = protocol
+                link.host = host
+            });
+            console.log(user)
+            res.render('profile',{user,host})
         }).catch(err=>{
             console.log(err)
             req.flash("error_msg", "Erro ao encotrar usuario")
