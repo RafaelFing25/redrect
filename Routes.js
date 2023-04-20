@@ -99,10 +99,12 @@ router.get('/profile',(req,res)=>{
 
 router.get('/logout', function(req, res){
     try{
-        req.logout();
+        req.logout(function(){
+            res.redirect('/');
+        });
         res.redirect('/');
     }catch(err) {
-        req.redirect('/')
+        req.redirect('/encurtar')
     }
   });
   
