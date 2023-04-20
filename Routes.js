@@ -102,7 +102,7 @@ router.get('/logout', function(req, res){
         req.logout(function(){
             res.redirect('/');
         });
-        res.redirect('/');
+        //res.redirect('/');
     }catch(err) {
         req.redirect('/encurtar')
     }
