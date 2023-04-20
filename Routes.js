@@ -98,8 +98,12 @@ router.get('/profile',(req,res)=>{
 })
 
 router.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
+    try{
+        req.logout();
+        res.redirect('/');
+    }catch(err) {
+        req.redirect('/')
+    }
   });
   
 router.post('/link/edit',(req,res)=>{
