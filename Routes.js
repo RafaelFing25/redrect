@@ -88,8 +88,8 @@ router.get('/profile',(req,res)=>{
             const host = req.get('host')
             const protocol = req.protocol
             console.log(user.links)
-            user.protocol = protocol
-            user.host = host
+            user.links.protocol = protocol
+            user.links.host = host
             res.render('profile',{user})
         }).catch(err=>{
             console.log(err)
