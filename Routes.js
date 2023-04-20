@@ -85,8 +85,10 @@ router.get('/profile',(req,res)=>{
     }else{
         console.log('req.user',req.user)
         UserModel.findById(req.user._id).lean().populate('links').then(user=>{
+            const host = req.get('host')
+            const protocol = req.protocol
             console.log(user.links)
-            res.render('profile',{user})
+            res.render('profile',{user,protocol,host})
         }).catch(err=>{
             console.log(err)
             req.flash("error_msg", "Erro ao encotrar usuario")
